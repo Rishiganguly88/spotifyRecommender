@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Istok+Web&display=swap" rel="style.css">
+    <title>Music Preferences Form</title>
+    <!--<style>
+        .tag {
+            display: inline-block;
+            padding: 5px;
+            margin: 5px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .tag-remove {
+            margin-left: 5px;
+            cursor: pointer;
+        }
+    </style>-->
+
+
+</head>
+<body>
+    <div class="container" style="color: #c58bf1; font-size: 17px;">
+    <form id="musicForm" action="/submit" method="POST">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <br>
+
+        <label for="age">Age:</label>
+        <!--<input type="number" id="age" name="age" >-->
+        <select id="age" name="age"placeholder="Age" required>
+            <option value="">Select Age</option>
+            <!-- Populate options from 9 to 100 -->
+        </select>
+
+        <br>
+
+       <!-- <label>Are you a Spotify user?</label>
+        <input type="radio" id="spotifyYes" name="spotifyUser" value="Yes" onclick="showGenres()">
+        <label for="spotifyYes">Yes</label>
+        <input type="radio" id="spotifyNo" name="spotifyUser" value="No" checked>
+        <label for="spotifyNo">No</label>-->
+
+        <div id="genresContainer" class="container2">
+            <!--style="display:none;">-->
+            <label for="genres" style="text-align: left; color: #c58bf1;">Select your favorite genres:</label>
+            <div id="genreButtons" class="flexbox" style="padding-top: 2%;">
+                <button class="tag1" onclick="addTag('HipHop')">HipHop</button>
+                <button class="tag1" onclick="addTag('EasyListening')">EasyListening</button>
+                <button class="tag1" onclick="addTag('RnB')">RnB</button>
+                <button class="tag1" onclick="addTag('EDM')">EDM</button>
+                <button class="tag1" onclick="addTag('Country')">Country</button>
+                <button class="tag1" onclick="addTag('Soulful')">Soulful</button>
+                <button class="tag1" onclick="addTag('Rock')">Rock</button>
+                <button class="tag1" onclick="addTag('Classical')">Classical</button>
+                <button class="tag1" onclick="addTag('Lofi')">Lofi</button>
+            </div>
+            <div id="selectedGenres" class="container3"  data-placeholder="Select upto 5 genres"></div>
+            <input type="hidden" id="selectedGenresText" name="selectedGenres">
+        </div>
+
+        <br>
+        <button class="button" type="submit" value="Submit">Submit</button>
+    </div>
+    </form>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var ageSelect = document.getElementById('age');
+            
+            // Populate options from 9 to 100
+            for (var i = 9; i <= 100; i++) {
+                var option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                ageSelect.appendChild(option);
+            }
+        });
+        /*function showGenres() {
+            var genresContainer = document.getElementById("genresContainer");
+            var spotifyYesRadio = document.getElementById("spotifyYes");
+
+            genresContainer.style.display = spotifyYesRadio.checked ? "block" : "none";
+        }*/
+
+        function addTag(genre) {
+            var selectedGenresContainer = document.getElementById("selectedGenres");
+            var selectedGenresHidden = document.getElementById("selectedGenresText");
+
+            var tags = selectedGenresContainer.querySelectorAll('.tag1');
+            var tagExists = false; // Flag to track if the tag already exists
+        for (var i = 0; i < tags.length; i++) {
+            if (tags[i].textContent === genre) {
+                tagExists = true;
+                break; // Exit loop if tag is already selected
+            }
+        }
+
+    // If tag already exists, exit function
+    if (tagExists) {
+        return;
+    }
+            // Check if the limit is reached
+            if (tags.length >= 5) {
+                alert("You can select at most 5 tags.");
+                return; // Exit function if limit is reached
+            }
+
+        
+
+            //if (tags.length > 5 || tags.some(tag => tag.textContent === genre)) {
+               // return; // Exit function if limit is reached or tag is already selected
+            //}
+
+
+            var tagElement = document.createElement("div");
+        
+            tagElement.classList.add("tag1");
+
+            tagElement.textContent = genre;
+
+            // Add a data attribute for the genre
+            tagElement.dataset.genre = genre;
+            
+            // Add a remove button
+            var removeButton = document.createElement("span");
+            removeButton.classList.add("tag-remove");
+            removeButton.textContent = "x";
+            removeButton.onclick = function() {
+                removeTag(tagElement);
+            };
+            tagElement.appendChild(removeButton);
+
+            selectedGenresContainer.appendChild(tagElement);
+
+            // Add the selected genre to the hidden input
+            var currentGenres = selectedGenresHidden.value.split(',').map(function (g) {
+                return g.trim();
+            });
+            currentGenres.push(genre);
+            selectedGenresHidden.value = currentGenres.join(', ');
+        }
+
+        function removeTag(tagElement) {
+            var selectedGenresContainer = document.getElementById("selectedGenres");
+            var selectedGenresHidden = document.getElementById("selectedGenresText");
+
+            // Remove the tag from the display
+            selectedGenresContainer.removeChild(tagElement);
+
+            // Remove the tag from the hidden input
+            var selectedGenres = selectedGenresHidden.value.split(',').map(function (g) {
+                return g.trim();
+            });
+            selectedGenres.splice(selectedGenres.indexOf(tagElement.dataset.genre), 1);
+            selectedGenresHidden.value = selectedGenres.join(', ');
+        }
+    </script>
+</body>
+</html>

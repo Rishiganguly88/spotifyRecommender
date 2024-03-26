@@ -10,7 +10,7 @@ password = ''
 database = ''
 
 # Function to insert data into the database
-def insert_data(name, age, email, options):
+def insert_data(name, email, age, genres):
     connection = pymysql.connect(host=host,
                                  user=user,
                                  password=password,
@@ -19,26 +19,24 @@ def insert_data(name, age, email, options):
     try:
         with connection.cursor() as cursor:
             # Create a new record
-            sql = "INSERT INTO your_table_name (name, age, email, options) VALUES (%s, %s, %s, %s)"
-            cursor.execute(sql, (name, age, email, options))
+            sql = "INSERT INTO your_table_name (name, email, age, genres) VALUES (%s, %s, %s, %s)"
+            cursor.execute(sql, (name, email, age, genres))
             connection.commit()
     finally:
         connection.close()
 
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    if request.method == 'POST':
-        # Retrieve form data
-        name = request.form['name']
-        age = request.form['age']
-        email = request.form['email']
-        options = ', '.join(request.form.getlist('options'))  # Combine selected options into a string
+@app.route('/submit', methods=['POST'])
+def submit_form():
+    # Retrieve form data
+    name = request.form['name']
+    email = request.form['email']
+    age = request.form['age']
+    genres = request.form['selectedGenres']
 
-        # Insert data into the database
-        insert_data(name, age, email, options)
-        
-        return 'Form submitted successfully!'
-    return render_template('index.html')
+    # Insert data into the database
+    insert_data(name, email, age, genres)
+    
+    return 'Form submitted successfully!'
 
 if __name__ == '__main__':
     app.run(debug=True)
